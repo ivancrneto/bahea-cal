@@ -2,8 +2,9 @@ from requests import get
 from bs4 import BeautifulSoup as bs
 from selenium import webdriver
 
-url_serie_a = "https://globoesporte.globo.com/futebol/brasileirao-serie-a/"
-url_serie_b = "https://globoesporte.globo.com/futebol/brasileirao-serie-b/"
+base_url = "https://globoesporte.globo.com/futebol"
+url_serie_a = "{}/brasileirao-serie-a/".format(base_url)
+url_serie_b = "{}/brasileirao-serie-b/".format(base_url)
 
 ff = webdriver.Firefox()
 ff.get(url_serie_a)
@@ -17,7 +18,7 @@ for i in range(38):
     seta_esq.click()
 
 for i in range(38):
-    
+
     bs_obj = bs(ff.page_source, 'html.parser')
 
     rodada = bs_obj.find('span', {'class':'lista-jogos__navegacao--rodada'})
@@ -41,5 +42,3 @@ for i in range(38):
         print('\n{} x {}\n{} {} {}\n'.format(mandante, visitante, data, hora, local))
 
     seta_dir.click()
-
-ff.quit()
