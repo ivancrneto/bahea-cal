@@ -26,9 +26,11 @@ for i in range(38):
     boxes = bs_obj.find_all('div', {'class' :'jogo theme'})
     for box in boxes:
         mandante = box.find('div', {'class':'placar__equipes placar__equipes--mandante'})
+        mandante_sigla = mandante.find('span', {'class', 'equipes__sigla'}).text
         mandante = mandante.find('span', {'class':'equipes__nome'}).text
-        
+
         visitante = box.find('div', {'class':'placar__equipes placar__equipes--visitante'})
+        visitante_sigla = visitante.find('span', {'class', 'equipes__sigla'}).text
         visitante = visitante.find('span', {'class':'equipes__nome'}).text
         
         info = box.find('div', {'class':'jogo__informacoes'})
@@ -40,4 +42,4 @@ for i in range(38):
 
     seta_dir.click()
 
-
+ff.quit()
