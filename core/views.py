@@ -105,7 +105,3 @@ def google_calendar_redirect_view(request):
         return render(request, "core/error.html")
     else:
         return render(request, "core/success.html")
-    
-@api_view(['GET'])
-def test_drf(request):
-    return Response({"message": "Hello for today! See you tomorrow!"})
