@@ -29,19 +29,12 @@ export default class Login extends React.Component {
             const  myResponse = await apiCalendar.handleAuthClick()
             console.log(myResponse.access_token)
 
-           /* var meuDicionario = {}
-            for (var key in rs1) {
-              meuDicionario[key] = rs1[key];
-            }
-            console.log(meuDicionario)
-            console.log(meuDicionario.access_token)
-*/
+           
             const response =  fetch('/v1/calendar/flow/', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                // Supondo que você precise passar o access token no corpo da requisição
-                // Modifique isso de acordo com os requisitos da sua API
+               
               },
              body: JSON.stringify({ accessToken: myResponse.access_token }),                
             });
@@ -76,19 +69,4 @@ export default class Login extends React.Component {
   
 
 
- /* const response = await fetch('/v1/calendar/flow/', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                // Supondo que você precise passar o access token no corpo da requisição
-                // Modifique isso de acordo com os requisitos da sua API
-              },
-             // body: JSON.stringify({ accessToken: access_token }),
-            });
-            
-            // Verificar se a chamada à API foi bem-sucedida
-            if (!response.ok) {
-              throw new Error('Erro ao chamar a API do backend');
-            }
-           */
-            // Ou qualquer outra ação após o login bem-sucedido
+ 
