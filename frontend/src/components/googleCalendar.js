@@ -1,4 +1,4 @@
-import ApiCalendar from "react-google-calendar-api";
+/* import ApiCalendar from "react-google-calendar-api";
 
 const config = {
   clientId: process.env.GOOGLE_CLIENT_ID, 
