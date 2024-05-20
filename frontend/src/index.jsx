@@ -6,11 +6,10 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Time from "./routes/Time.jsx";
-
+import  { GoogleOAuthProvider }  from  '@react-oauth/google' ;
 import './index.css'
 
 const router = createBrowserRouter([
-
   {
       path:"/",
       element: <Login/>,
@@ -24,13 +23,12 @@ const router = createBrowserRouter([
     path: "/Time",
     element: <Time />,
   },
-
-
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
-  
-  </React.StrictMode>,
+    <GoogleOAuthProvider clientId="470653035644-rkr19rof1eclp7f7gmd4044jt110hf9g.apps.googleusercontent.com">
+      <RouterProvider router={router} />
+    </GoogleOAuthProvider>
+  </React.StrictMode>
 )

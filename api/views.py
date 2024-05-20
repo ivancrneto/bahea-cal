@@ -1,4 +1,5 @@
 import os.path
+import json
 
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
@@ -14,7 +15,11 @@ from webapp.secrets import get_secret
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
+from googleapiclient.discovery import build as google_build
+
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 SCOPES = [
@@ -100,5 +105,76 @@ def calendar_flow_view(request):
         service.events().list(calendarId=user.calendar_id).execute()
     except Exception as e:
         return JsonResponse({"error": str(e)})
+    else:
+        return JsonResponse({"sucess": True})
+
+@api_view(['POST'])
+@method_decorator(csrf_exempt)
+def calendar_token(request):
+    # print('body', request.body['accessToken'])
+    payload = json.loads(request.body)
+    print('payload', payload)
+    # access_token = payload['access_token']
+    
+    if not payload:
+        return HttpResponseBadRequest("Não foi enviado nada do front")
+    
+    if 'state' in request.session:
+        print('req session state >>>>>',request.session['state'])
+    
+    # state = request.session.get("state") or request.GET.get("state")
+    # print('state', state)
+    # if state is None:
+    #     return JsonResponse({"error": "Algo de errado aconteceu."})
+    
+    config = get_secret(f"{settings.ENVIRONMENT}/google/calendar")
+    flow = google_auth_oauthlib.flow.Flow.from_client_config(client_config=config, scopes=SCOPES)
+    flow.redirect_uri = REDIRECT_URL
+    
+    try:
+        flow.fetch_token(code=access_token)
+    except Exception as e:
+        return JsonResponse({"error":str(e)})
+    
+    credentials = flow.credentials
+    print(credentials)
+    
+    userinfo_service = googleapiclient.discovery.build("oauth2", "v2", credentials=credentials)
+    user_info = userinfo_service.userinfo().get().execute()
+    
+    email = user_info.get("email")
+    User = get_user_model()
+    user, created = User.objects.get_or_create(username=email, email=email)
+    if created:
+        user.set_unusable_password()
+        user.save()
+        
+    if not CredentialsService.get_for(user):
+        saved_credentials = CredentialsService.create_for(user, credentials)
+    else:
+        saved_credentials = CredentialsService.update_for(user, credentials)
+    if not saved_credentials:
+        return HttpResponseBadRequest("Erro ao salvar as credenciais.")
+    
+    saved_credentials.user = user
+    saved_credentials.save(update_fields=["user"])
+    
+    authenticate_user = authenticate(request, username=email)
+    if authenticate_user:
+        login(request, authenticate_user)
+    
+    try:
+        service = google_build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
+        
+        if not user.calendar_id:
+            calendar = {"summary" : "BaheaCal", "timeZone": "America/Bahia"}
+            created_calendar = service.calendars().insert(body=calendar).execute()
+            user.calendar_id = created_calendar["id"]
+            user.save(update_fields=["calendar_id"])
+            
+        service.events().list(calendarID=user.calendar_id).execute()
+    except Exception as e:
+        return JsonResponse({"error": str(e)})
+    
     else:
         return JsonResponse({"sucess": True})

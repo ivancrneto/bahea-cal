@@ -49,10 +49,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "core",
     "users",
-    'rest_framework',
+    "rest_framework",
+    "corsheaders"
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -153,3 +155,4 @@ STATIC_ROOT = "static"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CSRF_TRUSTED_ORIGINS = [BASE_URL]
+CORS_ORIGIN_ALLOW_ALL = True   

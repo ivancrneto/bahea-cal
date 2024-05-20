@@ -1,29 +1,30 @@
 // import ApiCalendar from "react-google-calendar-api";
 import {} from 'react-router-dom'
-import  {  GoogleLogin, GoogleOAuthProvider  }  from  '@react-oauth/google' ;
-import { hasGrantedAllScopesGoogle } from '@react-oauth/google';
+import  { GoogleLogin, hasGrantedAllScopesGoogle }  from  '@react-oauth/google' ;
 import { jwtDecode } from 'jwt-decode';
-import axios from 'axios';
+// import axios from 'axios';
 
 // const apiCalendar = new ApiCalendar(config);
 export default function Login() {
   
-  <GoogleOAuthProvider clientId="470653035644-rkr19rof1eclp7f7gmd4044jt110hf9g.apps.googleusercontent.com"></GoogleOAuthProvider>;
-
-  const scope = ["https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.app.created",
-                  "https://www.googleapis.com/auth/userinfo.email",
-                  "https://www.googleapis.com/auth/userinfo.profile",
-                  "openid"]
-  console.log('scope configurado = ', scope)
+  // const scope = [ "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.app.created",
+  //                 "https://www.googleapis.com/auth/userinfo.email",
+  //                 "https://www.googleapis.com/auth/userinfo.profile",
+  //                 "openid"]
+  // console.log('scope configurado = ', scope)
   const login = GoogleLogin({
-    onSuccess: tokenResponse => console.log(tokenResponse),
+    onSuccess: tokenResponse => console.log('tokenResponse = ', tokenResponse),
   });
+  console.log('logiiiin:', login)
 
-  const hasAccess = hasGrantedAllScopesGoogle(
-    login.tokenResponse,
-    scope
-  );  
-  console.log(hasAccess);
+  const scope = [
+    "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.app.created",
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/userinfo.profile",
+    "openid"
+  ]
+  console.log('escopo configurado:')
+  console.log(scope)
 
   // return (<div>
   //         <button onClick={ () => login()}>Login com Google</button>
@@ -32,28 +33,46 @@ export default function Login() {
 
   const handleLogin = async (credentialResponse) => {
     var obj = jwtDecode(credentialResponse.credential);
+    console.log('obj: ',obj);
     var data = JSON.stringify(obj);
-    console.log(data);
+    console.log('data = ', data);
 
     // const data = {your data to send to server};
 
-    const config = {
+  //   const config = {
+  //     method: 'POST',
+  //     url: 'http://127.0.0.1:8000/api/v1/calendar/token/',
+  //     headers: {},
+  //     data: data
+  //   }
+
+
+  // await axios(config)
+    const response = fetch('http://localhost:8000/api/v1/calendar/token/', {
       method: 'POST',
-      url: 'http://127.0.0.1:8000/api/v1/calendar/token/',
-      headers: {},
-      data: data
-    }
+      headers: {
+        'Content-Type': 'application/json',
+        'Allow-Control-Allow-Origin': '*'
+      },
+      body: data,                
+    });
+    console.log('response body =', response.body)
 
-  await axios(config)
+    const hasAccess = hasGrantedAllScopesGoogle(
+      response.body,
+      "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "openid"
+    );  
+    console.log('hasAccess = ', hasAccess);
+
+
+  }
+
+  return(<GoogleLogin onSuccess={handleLogin} />)
 }
 
-  return(
-    <GoogleOAuthProvider clientId="470653035644-rkr19rof1eclp7f7gmd4044jt110hf9g.apps.googleusercontent.com">
-        <GoogleLogin
-            onSuccess={handleLogin}
-        />
-    </GoogleOAuthProvider>)
-}
 
 
- 
+     
