@@ -35,7 +35,7 @@ export default function Login() {
     var data = JSON.stringify(obj);
     console.log(data);
 
-    // const data = {your data to send to server};
+  //   // const data = {your data to send to server};
 
     const config = {
       method: 'POST',
