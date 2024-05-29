@@ -14,6 +14,7 @@ django.setup()
 import arrow
 import attrs
 
+from django.conf import settings
 from django.db import transaction
 
 from core.models import Team, Championship, Location, Phase, Round, Match, SoccerEvent
@@ -39,11 +40,11 @@ class CalendarEvent:
         if match.location:
             description += f", {match.location.popular_name}"
         return cls(
-            summary=f"[{match.championship.name}] {match.home_team.popular_name} x {match.away_team.popular_name}",
+            summary=f"{settings.CALENDAR_NAME_PREFIX}[{match.championship.name}] {match.home_team.popular_name} x {match.away_team.popular_name}",
             description=description,
-            start_datetime=arrow.get(match.start_at),
+            start_datetime=arrow.get(match.start_at).to(timezone),
             start_timezone=timezone,
-            end_datetime=arrow.get(match.start_at).shift(minutes=+120),
+            end_datetime=arrow.get(match.start_at).to(timezone).shift(minutes=+120),
             end_timezone=timezone,
             location=match.location and match.location.popular_name or "",
         )
@@ -99,14 +100,13 @@ def store(event):
         else:
             start_at = arrow.get(f"{start_date} {timezone}", "YYYY-MM-DD ZZZ").datetime
 
-        match = Match.objects.get_or_create(
+        match = Match.objects.update_or_create(
             home_team=home_team_obj,
             away_team=away_team_obj,
             championship=championship_obj,
-            location=location_obj,
             phase=phase_obj,
             round=round_obj,
-            start_at=start_at,
+            defaults={"location": location_obj, "start_at": start_at},
         )[0]
         SoccerEvent.objects.get_or_create(match=match)
 

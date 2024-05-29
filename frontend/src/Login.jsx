@@ -74,19 +74,34 @@ export default function Login() {
   // }
 
   const handleLogin = async(credentialResponse) => {
-    // const response = fetch('http://localhost:8000/api/v1/calendar/token/', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Allow-Control-Allow-Origin': '*'
-    //   },
-    //   body: credentialResponse,                
-    // });
+    // console.log('credential Response', credentialResponse)
+    const response = fetch('http://localhost:8000/api/v1/calendar/token/', {
+      method: 'POST',
+      // mode: 'no-cors',
+      headers: {
+        // 'X-BLA' : 'bla!',
+        'Access-Control-Allow-Headers' : '*',
+        'Content-Type': 'application/json',
+        'Allow-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': '*'
+      },
+      body: credentialResponse,                
+    });
     
     // console.log('response body =', response.body)
     console.log(credentialResponse)
   }
-
+  // const teste = async() => {
+  //   const resposta = fetch('http://localhost:8000/api/v1/calendar/token/', {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Access-Control-Allow-Headers': 'X-Requested-With',
+  //       'Allow-Control-Allow-Origin': '*' 
+  //     },
+  //   });
+  //   console.log('resposta = ',resposta);
+  // }
 
   const login = useGoogleLogin({ 
     scope: "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.app.created https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid", 
@@ -96,6 +111,7 @@ export default function Login() {
     onSuccess: handleLogin,
   });
 
+  // return (<button onClick={() => teste()}> oiasodiaosio</button>)
   return (<button onClick={() => login()}> Fazer login</button>)
 
   // return(<GoogleLogin onSuccess={credentialResponse => {

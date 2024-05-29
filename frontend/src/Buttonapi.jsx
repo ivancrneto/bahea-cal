@@ -15,6 +15,7 @@ export default function Login1() {
   }
 
   return (<button onClick={Login1}> Fazer login</button>)
+<<<<<<< HEAD
 }
 
 
@@ -53,3 +54,6 @@ export default function Login1() {
 // }
 //         return (<button onClick={() => Login1()}> Fazer login</button>)
 //  }
+=======
+}
+>>>>>>> 47d2db413d38ab8a9e87759ddf7ce20f5943283d
