@@ -7,3 +7,4 @@ urlpatterns = [
     path('v1/calendar/token/', views.calendar_token, name='calendar_token'),
     path('v1/cors/test', view_cors.cors_test, name='cors_test'),
 ]
+

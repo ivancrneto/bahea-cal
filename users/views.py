@@ -2,7 +2,7 @@ from django.core.exceptions import BadRequest
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-<<<<<<< HEAD
+
 # Create your views here.
 
 
@@ -28,7 +28,7 @@ from django.views.decorators.http import require_http_methods
 """
 
 
-=======
+
 from core.models import Team
 
 
@@ -48,4 +48,4 @@ def confirm(request):
         request.user.subscriptions.add(team)
 
     return render(request, "users/confirmed.html")
->>>>>>> 47d2db413d38ab8a9e87759ddf7ce20f5943283d
+
