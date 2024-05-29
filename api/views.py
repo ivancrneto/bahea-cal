@@ -80,12 +80,12 @@ def calendar_token(request):
     # 4/0AdLIrYdjDBOqa7mxm9bGUUdXo_lyOu1YgKIiDh6_UhBCmfZNI_JMkRDLvg33YTHPSaWe2A
     try:
         credentials = flow.fetch_token(code=code)
-        print('crendentials:', credentials)
+        print('crendentials:', flow.credentials)
     except Exception as e:
         print(f"Error: {e}")
         return JsonResponse({"error": str(e)})
     
-    userinfo_service = googleapiclient.discovery.build("oauth2", "v2", credentials=credentials)
+    userinfo_service = googleapiclient.discovery.build("oauth2", "v2", credentials=flow.credentials)
     user_info = userinfo_service.userinfo().get().execute()
 
     email = user_info.get("email")
@@ -110,7 +110,7 @@ def calendar_token(request):
         login(request, authenticated_user)
 
     try:
-        service = googleapiclient.discovery.build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
+        service = googleapiclient.discovery.build(API_SERVICE_NAME, API_VERSION, credentials=flow.credentials)
 
         if not user.calendar_id:
             calendar = {"summary": "BaheaCal", "timeZone": "America/Bahia"}

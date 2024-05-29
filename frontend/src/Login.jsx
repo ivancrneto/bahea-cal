@@ -5,7 +5,6 @@ import { hasGrantedAllScopesGoogle } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 
-// const apiCalendar = new ApiCalendar(config);
 export default function Login() {
   
   <GoogleOAuthProvider clientId="470653035644-rkr19rof1eclp7f7gmd4044jt110hf9g.apps.googleusercontent.com"></GoogleOAuthProvider>;
@@ -106,8 +105,8 @@ export default function Login() {
   //   console.log('resposta = ',resposta);
   // }
 
-  const login = useGoogleLogin({ 
-    scope: "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.app.created https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid", 
+  const login = useGoogleLogin({
+    scope: "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.app.created https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid",
     flow: 'auth-code',
     access_type: 'offline',
     prompt: 'consent',
