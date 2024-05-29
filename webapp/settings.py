@@ -10,11 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-import json
+import sentry_sdk
+import django.db.models.signals
 from socket import gethostname, gethostbyname
 from pathlib import Path
 from config import djsettings
-
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,6 +34,8 @@ BASE_URL = djsettings.get("BASE_URL", cast="@str")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = djsettings.get("DEBUG", False, cast="@bool")
 ENVIRONMENT = djsettings.ENVIRONMENT
+
+CALENDAR_NAME_PREFIX = djsettings.get('CALENDAR_NAME_PREFIX', '', cast="@str")
 
 
 AUTH_USER_MODEL = "users.User"
@@ -143,7 +146,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Bahia"
 
 USE_I18N = True
 
