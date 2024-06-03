@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom/client'
 import Login from './Login.jsx'
 import Login1 from  './Buttonapi.jsx'
 
-import Login1 from  './Buttonapi.jsx'
-
 import {
   createBrowserRouter,
   RouterProvider,
@@ -29,11 +27,7 @@ const router = createBrowserRouter([
     element: <Time />,
   },
 
-  {
-      path: "/buttonapi",
-      element: <Login1/>,
 
-  },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

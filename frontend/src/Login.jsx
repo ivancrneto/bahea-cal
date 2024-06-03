@@ -26,43 +26,28 @@ export default function Login() {
   //   </div>);
 
   const handleLogin = async (credentialResponse) => {
-    console.log('credential Response', credentialResponse);
+    var obj = jwtDecode(credentialResponse.credential);
+    var data = JSON.stringify(obj);
+    console.log(data);
 
-    try {
-      const response = await axios.post('http://localhost:8000/api/v1/calendar/token/', credentialResponse, {
-        headers: {
-          // 'Access-Control-Allow-Headers': '*',
-          'Content-Type': 'application/json',
-          // 'Allow-Control-Allow-Origin': '*',
-          // 'Access-Control-Allow-Methods': '*'
-        }
-      });
-      
-      console.log('response-data: ', response.data);
-    } catch (error) {
-      console.error('error: ', error);
+  //   // const data = {your data to send to server};
+
+    const config = {
+      method: 'POST',
+      url: 'http://127.0.0.1:8000/api/v1/calendar/token/',
+      headers: {},
+      data: data
     }
-  }
 
-  const login = useGoogleLogin({
-    scope: "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.app.created https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid",
-    flow: 'auth-code',
-    access_type: 'offline',
-    prompt: 'consent',
-    onSuccess: handleLogin,
-  });
+  await axios(config)
+}
 
-  // return (<button onClick={() => teste()}> oiasodiaosio</button>)
-  return (<button onClick={() => login()}> Fazer login</button>)
-
-  // return(<GoogleLogin onSuccess={credentialResponse => {
-  //     console.log(credentialResponse);
-  //   }}
-  //   onError={() => {
-  //     console.log('Login Failed');
-  //   }}
-  // />) 
-
+  return(
+    <GoogleOAuthProvider clientId="470653035644-rkr19rof1eclp7f7gmd4044jt110hf9g.apps.googleusercontent.com">
+        <GoogleLogin
+            onSuccess={handleLogin}
+        />
+    </GoogleOAuthProvider>)
 }
 
 

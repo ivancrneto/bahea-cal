@@ -12,20 +12,12 @@ from django.http import JsonResponse
 from google_auth_oauthlib.flow import Flow
 from google.auth.transport import Request
 
-#new-imports
-from google_auth_oauthlib.flow import Flow
-from google.auth.transport import Request
-
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 SCOPES = [
     "https://www.googleapis.com/auth/calendar.app.created",
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/userinfo.profile",
-<<<<<<< HEAD
     "openid",
-=======
-    "openid",   
->>>>>>> da576de (tests code)
 ]
 
 REDIRECT_URL = f"{settings.BASE_URL}/calendar/redirect/"
@@ -56,7 +48,6 @@ def calendar_init_view(request):
 @api_view(['POST'])
 def calendar_token(request):
     config = get_secret(f"{settings.ENVIRONMENT}/google/calendar")
-<<<<<<< HEAD
     flow = Flow.from_client_config(config,scopes=SCOPES,redirect_uri="http://localhost:3000")
     code = request.data['code']
     
@@ -72,55 +63,5 @@ def calendar_token(request):
     except Exception as e:
         print(f"Error: {e}")
         return JsonResponse({"error": str(e)})
-=======
-    flow = Flow.from_client_config(config,scopes=SCOPES,redirect_uri="http://127.0.0.1:3000")
-    code = request.data['code']
-    print('code', code)
-    # flow.fetch_token(code)  
-    # 4/0AdLIrYdjDBOqa7mxm9bGUUdXo_lyOu1YgKIiDh6_UhBCmfZNI_JMkRDLvg33YTHPSaWe2A
-    try:
-        credentials = flow.fetch_token(code=code)
-        print('crendentials:', flow.credentials)
-    except Exception as e:
-        print(f"Error: {e}")
-        return JsonResponse({"error": str(e)})
-    
-    userinfo_service = googleapiclient.discovery.build("oauth2", "v2", credentials=flow.credentials)
-    user_info = userinfo_service.userinfo().get().execute()
-
-    email = user_info.get("email")
-    User = get_user_model()
-    user, created = User.objects.get_or_create(username=email, email=email)
-    if created:
-        user.set_unusable_password()
-        user.save()
-
-    if not CredentialsService.get_for(user):
-        saved_credentials = CredentialsService.create_for(user, credentials)
-    else:
-        saved_credentials = CredentialsService.update_for(user, credentials)
-    if not saved_credentials:
-        return redirect("api/v1/calendar/init")
-
-    saved_credentials.user = user
-    saved_credentials.save(update_fields=["user"])
-
-    authenticated_user = authenticate(request, username=email)
-    if authenticated_user:
-        login(request, authenticated_user)
-
-    try:
-        service = googleapiclient.discovery.build(API_SERVICE_NAME, API_VERSION, credentials=flow.credentials)
-
-        if not user.calendar_id:
-            calendar = {"summary": "BaheaCal", "timeZone": "America/Bahia"}
-            created_calendar = service.calendars().insert(body=calendar).execute()
-            user.calendar_id = created_calendar["id"]
-            user.save(update_fields=["calendar_id"])
-
-        service.events().list(calendarId=user.calendar_id).execute()
-    except Exception as e:
-        return JsonResponse({"error": str(e)})
->>>>>>> da576de (tests code)
     else:
         return JsonResponse({"sucess": True})
