@@ -10,7 +10,7 @@ const FormularioNotificacao = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        /// Aqui você pode adicionar a lógica para lidar com o envio do formulário
+        // Aqui você pode adicionar a lógica para lidar com o envio do formulário
         console.log({ nome, sobrenome, calendario, notificacao, clube, outroClube });
         console.log(React)
     };
