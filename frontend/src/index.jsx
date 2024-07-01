@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Login from './Login.jsx'
+import FormSettings from './FormSettings.jsx'
 
 
 
@@ -30,8 +31,13 @@ const router = createBrowserRouter([
   },
 
   {
+      path: "/formsettings",
+      element: <FormSettings.jsx/>,
+  },
+  {
     path: "/settings",
     element: <UserSettings/>,
+
   },
 
 ]);
